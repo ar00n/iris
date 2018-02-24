@@ -7,4 +7,3 @@ You can invite the bot to your server [here](https://discordapp.com/api/oauth2/a
 
 # Support
 If you need any help or have found an issue with the bot, join the [official discord](https://discord.gg/JrYWrnv).
-test
