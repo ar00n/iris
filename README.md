@@ -6,4 +6,4 @@ iris is a bot for discord made with discord.py. It has features such as providin
 You can invite the bot to your server [here](https://discordapp.com/api/oauth2/authorize?client_id=396322727079968778&permissions=70778055&scope=bot). Upvote it on [discordbots.org](https://discordbots.org/bot/396322727079968778) <3
 
 # Support
-If you need any help or have found an issue with the bot, join the [official discord](http://torturedguild.org/wp-content/uploads/2016/08/discord.png).
+If you need any help or have found an issue with the bot, join the [official discord](https://discord.gg/JrYWrnv).
