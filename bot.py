@@ -11,6 +11,9 @@ import hashlib
 import urllib.parse
 import urllib.request
 import urllib.response
+from time import sleep
+from multiprocessing import Process
+from translate import Translator
 
 bot = commands.Bot(command_prefix='.')
 
@@ -21,46 +24,68 @@ giphy = data["giphy"]
 heads = 0
 tails = 0
 
+async def status():
+    servers = list(bot.servers)
+    await bot.change_presence(game=discord.Game(name='.help | {} Servers'.format(str(len(servers)))))
+
 @bot.event
 async def on_ready():
     print (bot.user.name + ' is ready')
-    await bot.change_presence(game=discord.Game(name='.help'))
+
+    servers = list(bot.servers)
+    await bot.change_presence(game=discord.Game(name='.help | .invite'))
+    #p = Process(target=status)
+    #p.start()
 
 @bot.command(pass_context=True)
 async def ping(ctx):
     """pong!
         A command that will return a pong.
         """
-    await bot.say(':ping_pong: skrt')
+
+    await bot.say('Pong! :ping_pong:')
     
 @bot.command(pass_context=True)
-async def info(ctx, user: discord.Member):
+async def info(ctx, user: discord.Member = None):
     """*search <user>
-        A command that will return information about the requested user.
+        A command that will return information about the requested user or you!
         """
+    if user == None:
+        user = ctx.message.author
     await bot.say('```Status: {}'.format(user.status) + '\nRole: {}'.format(user.top_role) + '\nJoined: {}'.format(user.joined_at) + '\nPlaying: {}'.format(user.game) + '```')
 
 @bot.command(pass_context=True)
-async def md5(ctx, *, message):
-    """*plain <plainText>
-        A command that will convert given text to md5 format.
+async def hash(ctx, hash, *, message):
+    """<algorithm> <plainText> Converts given text to requested hash.
+        A command that will convert given text to: sha1, sha224, sha256, sha384, sha512, blake2b, blake2s and md5()
         """
-    m = hashlib.md5()
-    m.update(str.encode(message))
-    await bot.say('{}'.format(m.hexdigest()))
+    if hash == "md5":
+        m = hashlib.md5()
+        m.update(str.encode(message))
+    elif hash == "sha1":
+        m = hashlib.sha1()
+        m.update(str.encode(message))
+    elif hash == "sha256":
+        m = hashlib.sha256()
+        m.update(str.encode(message))
+    elif hash == "sha384":
+        m = hashlib.sha384()
+        m.update(str.encode(message))
+    elif hash == "sha512":
+        m = hashlib.sha512()
+        m.update(str.encode(message))
+    elif hash == "blake2b":
+        m = hashlib.blake2b()
+        m.update(str.encode(message))
+    elif hash == "blake2s":
+        m = hashlib.blake2s()
+        m.update(str.encode(message))
 
-@bot.command(pass_context=True)
-async def sha256(ctx, *, message):
-    """*plain <plainText>
-        A command that will convert given text to sha256 format.
-        """
-    m = hashlib.sha256()
-    m.update(str.encode(message))
     await bot.say('{}'.format(m.hexdigest()))
 
 @bot.command(pass_context=True)
 async def leet(ctx, *, message):
-    """*plain <plainText>
+    """<plainText> Translates given text to "leet".
         A command that will convert given text to leet format.
         """
     def leet(text):
@@ -71,9 +96,18 @@ async def leet(ctx, *, message):
     await bot.say(leet(message))
 
 @bot.command(pass_context=True)
+async def translate(ctx, fromLang, toLang, *, message):
+    """<from> <to> <text> Will translate given text.
+        A command that will translate given text from and to specified languages.
+        """
+    translator= Translator(to_lang=toLang, from_lang=fromLang)
+    translation = translator.translate(message)
+    await bot.say(translation)
+
+@bot.command(pass_context=True)
 async def avatar(ctx, user: discord.Member):
     """*search <user>
-        A command that will return the url of a user.
+        A command that will return the avatar url of a user.
         """
     await bot.say('{}'.format(user.avatar_url))
 
@@ -100,6 +134,23 @@ async def flip(ctx):
         tails += 1
 
 @bot.command(pass_context=True)
+async def dice(ctx, dice: int = 1):
+    """Rolls a dice or a defined amount of dice.
+        A command that will roll dice.
+        """
+    num = 6 * dice
+    rand = 0
+    if dice > 1000:
+        rand = 'a lot of dices'
+        #await bot.say("That's a lot of dices... :game_die:")
+    elif dice == None:
+        rand = random.randint(1,6)
+    else:
+        rand = random.randint(1,num)
+
+    await bot.say('You rolled {}! :game_die:'.format(rand))
+
+@bot.command(pass_context=True)
 async def flips(ctx):
     """flip statistics.
         A command that will return the statistics of the flip command.
@@ -118,7 +169,10 @@ async def echo(ctx, *, message):
     """Will echo the message.
         A command that will echo the message.
         """
-    await bot.say(message + ' -{}'.format(ctx.message.author.mention))
+    if "@everyone" not in message:
+        await bot.say(message + ' -{}'.format(ctx.message.author.mention))
+    else:
+        await bot.say('My names {} and I want attention.'.format(ctx.message.author.mention))
 
 @bot.command(pass_context=True)
 async def hello(ctx):
@@ -149,7 +203,16 @@ async def members(ctx):
     """How many members?
         A command that will return the number of users in a discord server.
         """
-    await bot.say('There are {} members in this server.'.format(sum(1 for _ in bot.get_all_members())))
+    
+    await bot.say('There are {} members in this server.'.format(ctx.message.server.member_count))
+
+@bot.command(pass_context=True)
+async def contact(ctx):
+    """How many users can I see?
+        A command that will return the number of users that this bot can see.
+        """
+    
+    await bot.say('I can see {} Discord users.'.format(sum(1 for _ in bot.get_all_members())))
 
 @bot.command(pass_context=True)
 async def gay(ctx):
@@ -163,7 +226,7 @@ async def invite(ctx):
     """Invite me to your server!
         A command that will return a link that you can use to invite this bot!
         """
-    await bot.say('You can invite me to your server with: https://discordapp.com/api/oauth2/authorize?client_id=396322727079968778&permissions=3406913&scope=bot.')
+    await bot.say('You can invite me to your server with: https://discordapp.com/api/oauth2/authorize?client_id=396322727079968778&permissions=70778055&scope=bot.')
 
 @bot.command(pass_context=True)
 async def gif(ctx, *, query):
@@ -202,32 +265,24 @@ async def joke(ctx):
     await bot.say(a)
 
 @bot.command(pass_context=True)
-async def grlc(ctx):
-    """Current market information on Garlicoin.
+async def value(ctx, crypto, currency = None):
+    """<crypto> <currency> Information on specified crypto.
         A command that will return market information provided by CoinMarketGap.
         """
-    url = 'https://api.coinmarketcap.com/v1/ticker/garlicoin/'
+    if currency == None:
+        url = 'https://api.coinmarketcap.com/v1/ticker/{}/'.format(crypto)
+    else:
+        url = 'https://api.coinmarketcap.com/v1/ticker/{}/?convert={}'.format(crypto, currency)
     req = urllib.request.Request(url)
 
     r = urllib.request.urlopen(req).read()
     cont = json.loads(r.decode('utf-8'))
     counter = 0
-
-    await bot.say('```Name: {} ({})'.format(cont[0]['name'], cont[0]['symbol']) + '\nPrice ($): {} ({}%)'.format(cont[0]['price_usd'], cont[0]['percent_change_24h']) + '\nPrice (BTC): {}'.format(cont[0]['price_btc']) + '\n24 Hr Volume ($): {}```'.format(cont[0]['24h_volume_usd']))
-
-@bot.command(pass_context=True)
-async def btc(ctx):
-    """Current market information on Bitcoin.
-        A command that will return market information provided by CoinMarketGap.
-        """
-    url = 'https://api.coinmarketcap.com/v1/ticker/bitcoin/'
-    req = urllib.request.Request(url)
-
-    r = urllib.request.urlopen(req).read()
-    cont = json.loads(r.decode('utf-8'))
-    counter = 0
-
-    await bot.say('```Name: {} ({})'.format(cont[0]['name'], cont[0]['symbol']) + '\nPrice ($): {} ({}%)'.format(cont[0]['price_usd'], cont[0]['percent_change_24h']) + '\n24 Hr Volume ($): {}```'.format(cont[0]['24h_volume_usd']))
+    if currency == None:
+        price = '\nPrice ($): {} ({}%)'.format(cont[0]['price_usd'], cont[0]['percent_change_24h'])
+    else:
+        price = '\nPrice ({}): {} ({}%)'.format(currency.upper(), cont[0]['price_' + currency], cont[0]['percent_change_24h'])
+    await bot.say('```Name: {} ({})'.format(cont[0]['name'], cont[0]['symbol']) + price + '\nPrice (BTC): {}'.format(cont[0]['price_btc']) + '\n24 Hr Volume ($): {}```'.format(cont[0]['24h_volume_usd']))
 
 @bot.command(pass_context=True)
 async def support(ctx):
@@ -250,6 +305,7 @@ async def servers(ctx):
         """
     servers = list(bot.servers)
     await bot.say('I am currently running on ' + str(len(bot.servers)) + ' servers.')
+    #await bot.change_presence(game=discord.Game(name='.help | {} Servers'.format(str(len(servers)))))
 
 @bot.command(pass_context=True)
 @commands.has_permissions(kick_members=True)
