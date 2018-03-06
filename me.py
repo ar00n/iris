@@ -19,42 +19,42 @@ class Me():
             A command that will return the number of users that this bot can see.
             """
     
-        await self.bot.say('I can see {} Discord users.'.format(sum(1 for _ in bot.get_all_members())))
+        await self.bot.say('I can see {} Discord users.'.format(sum(1 for _ in self.bot.get_all_members())))
 
     @commands.command(pass_context=True)
-    async def owner(self, ctx):
+    async def creator(self, ctx):
         """Shows the creator of me!
             A command that will return the owner of this bot.
             """
-        await self.bot.say('This bot is owned by `ar0n#1462`.')
+        await self.bot.say('This bot was made with love and care from `ar0n#1462`.')
 
     @commands.command(pass_context=True)
     async def gay(self, ctx):
         """Gays on Sunshine invite link.
             A command that will return an invite to the most awesome Discord ever.
             """
-        await self.bot.say('https://discord.gg/hwR5neh')
+        await self.bot.say('<https://discord.gg/hwR5neh>')
 
     @commands.command(pass_context=True)
     async def invite(self, ctx):
         """Invite me to your server!
             A command that will return a link that you can use to invite this bot!
             """
-        await self.bot.say('You can invite me to your server with: https://discordapp.com/api/oauth2/authorize?client_id=396322727079968778&permissions=70778055&scope=bot.')
+        await self.bot.say('You can invite me to your server with: <https://discordapp.com/api/oauth2/authorize?client_id=396322727079968778&permissions=70778055&scope=bot>.')
 
     @commands.command(pass_context=True)
     async def support(self, ctx):
         """iris Official Discord
             A command that will return the invite link for the iris discord.
             """
-        await self.bot.say('Official iris Discord: https://discord.gg/JrYWrnv')
+        await self.bot.say('Official iris Discord: <https://discord.gg/JrYWrnv>')
 
     @commands.command(pass_context=True)
     async def upvote(self, ctx):
         """Please upvote this bot on discordbots.org <3
             A command that will return the link to iris on discordbots.org.
             """
-        await self.bot.say('UPVOTE!!! :thumbsup: https://discordbots.org/bot/396322727079968778')
+        await self.bot.say('Goto <https://discordbots.org/bot/396322727079968778> and vote for me! :heart:')
 
 def setup(bot):
     bot.add_cog(Me(bot))

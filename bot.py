@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import Bot
 import json
+import asyncio
 
 bot = commands.Bot(command_prefix=['.', '<@396322727079968778> '])
 
@@ -12,8 +13,6 @@ key = data["key"]
 @bot.event
 async def on_ready():
     print (bot.user.name + ' is ready')
-
-    servers = list(bot.servers)
     await bot.change_presence(game=discord.Game(name='.help | .invite'))
 
 @bot.command(pass_context=True)

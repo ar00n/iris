@@ -1,9 +1,10 @@
 import discord
 from discord.ext import commands
-from random import choice
+from secrets import choice
 import aiohttp
 import json
 import asyncio
+import urllib
 
 data = json.load(open('config.json'))
 giphy = data["giphy"]
@@ -29,8 +30,8 @@ class Fun():
         """Hello! 
             A command that will return with a warm message.
             """
-        choices = ('Hey!', 'Hello!', 'Hi!', 'Hallo!', 'Bonjour!', 'Hola!', 'Fuck off! :middle_finger:')
-        await self.bot.say(random.choice(choices))
+        choices = ('Hey!', 'Hello!', 'Hi!', 'Hallo!', 'Bonjour!', 'Hola!')
+        await self.bot.say(choice(choices))
 
     @commands.command(pass_context=True)
     async def quote(self, ctx):
@@ -38,7 +39,7 @@ class Fun():
             A command that will return a powerful quote.
             """
         choices = ('If you tell a big enough lie and tell it frequently enough, it will be believed.', 'Make the lie big, make it simple, keep saying it, and eventually they will believe it.', 'He alone, who owns the youth, gains the future.', 'Those who want to live, let them fight, and those who do not want to fight in this world of eternal struggle do not deserve to live.', 'Demoralize the enemy from within by surprise, terror, sabotage, assassination. This is the war of the future.', 'The great masses of the people will more easily fall victims to a big lie than to a small one.', 'As a Christian I have no duty to allow myself to be cheated, but I have the duty to be a fighter for truth and justice.', 'ur mom gay')
-        await bot.say(choice(choices))
+        await self.bot.say(choice(choices))
 
     @commands.command(pass_context=True)
     async def echo(self, ctx, *, message):

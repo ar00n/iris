@@ -3,7 +3,8 @@ from discord.ext import commands
 import hashlib
 from translate import Translator
 import datetime
-from random import choice
+from secrets import choice
+from random import randint
 import urllib
 import json
 
@@ -89,11 +90,14 @@ class Utility():
         await self.bot.say('There are {} members in this server.'.format(ctx.message.server.member_count))
 
     @commands.command(pass_context=True)
-    async def randint(self, ctx):
+    async def randint(self, ctx, min: int, max: int):
         """Generate a random integer. 
             A command that will return a random number between 1000000 and 9999999.
             """
-        await self.bot.say(random.randint(1000000, 9999999))
+        if max < 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001:
+            await self.bot.say(randint(min, max))
+        else:
+            await self.bot.say('Woah, the max I can do is `10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000` (a Googol). Calm down {}!'.format(ctx.message.author.mention))
 
     @commands.command(pass_context=True)
     async def value(self, ctx, crypto, currency = None):
