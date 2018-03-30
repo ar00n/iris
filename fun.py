@@ -26,6 +26,14 @@ class Fun():
         await self.bot.say(leet(message))
 
     @commands.command(pass_context=True)
+    async def oof(self, ctx):
+        """oof! 
+            A command that will return oof.
+            """
+        choices = ('**oof**', '***oof***', '__**oof**__', '__***oof***__', '~~oof~~')
+        await self.bot.say(choice(choices))
+
+    @commands.command(pass_context=True)
     async def hello(self, ctx):
         """Hello! 
             A command that will return with a warm message.
