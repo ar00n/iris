@@ -24,9 +24,14 @@ class Utility():
         """<from> <to> <text> Will translate given text.
             A command that will translate given text from and to specified languages.
             """
-        translator = Translator(to_lang=toLang, from_lang=fromLang)
-        translation = translator.translate(message)
-        await self.bot.say(translation)
+        if "@everyone" in message:
+            await self.bot.say('My names {} and I want attention.'.format(ctx.message.author.mention))
+        elif "@here" in message:
+            await self.bot.say('My names {} and I want attention.'.format(ctx.message.author.mention))
+        else:
+            translator = Translator(to_lang=toLang, from_lang=fromLang)
+            translation = translator.translate(message)
+            await self.bot.say(translation) 
 
     @commands.command(pass_context=True)
     async def info(self, ctx, user: discord.Member = None):
