@@ -54,10 +54,12 @@ class Fun():
         """Will echo the message.
             A command that will echo the message.
             """
-        if "@everyone" not in message:
-            await self.bot.say(message + ' -{}'.format(ctx.message.author.mention))
-        else:
+        if "@everyone" in message:
             await self.bot.say('My names {} and I want attention.'.format(ctx.message.author.mention))
+        elif "@here" in message:
+            await self.bot.say('My names {} and I want attention.'.format(ctx.message.author.mention))
+        else:
+            await self.bot.say(message + ' -{}'.format(ctx.message.author.mention))
 
     @commands.command(pass_context=True)
     async def gif(self, ctx, *, query):
