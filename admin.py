@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
-from random import randint
 from time import sleep
+from secrets import choice
 
 class Admin():
     def __init__(self, bot):
@@ -14,6 +14,17 @@ class Admin():
             A command that will kick inputted member.
             """
         await self.bot.kick(user)
+        
+    @commands.command(pass_context=True)
+    @commands.has_permissions(kick_members=True)
+    async def randomkick(self, ctx):
+        """Kicks a random member.
+            A command that will kick some random person.
+            """
+        members = ctx.message.server.members
+        member = choice(list(members))
+        await self.bot.say('{} just got randomly kicked!'.format(member.mention))
+        await self.bot.kick(member)
 
     @commands.command(pass_context=True)
     @commands.has_permissions(ban_members=True)
