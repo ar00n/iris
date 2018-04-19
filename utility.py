@@ -124,6 +124,42 @@ class Utility():
             price = '\nPrice ({}): {} ({}%)'.format(currency.upper(), cont[0]['price_' + currency], cont[0]['percent_change_24h'])
         await self.bot.say('```Name: {} ({})'.format(cont[0]['name'], cont[0]['symbol']) + price + '\nPrice (BTC): {}'.format(cont[0]['price_btc']) + '\n24 Hr Volume ($): {}```'.format(cont[0]['24h_volume_usd']))
 
+    @commands.command(pass_context=True)
+    async def glitch(self, ctx, url):
+        """<imageUrl> Glitches the specified JPG URL.
+            A command that will glitch the JPG given.
+            """
+        if ".jpg" not in url:
+            await self.bot.say('Image must be a `.jpg`.')
+        else:  
+            r = requests.head(url)
+            if r.status_code != 200:
+                await self.bot.say("That file doesn't exist.")
+            elif int(r.headers['Content-Length']) > 5000000:
+                await self.bot.say('Image must be lower than 5 MB.')
+            else:
+                r = requests.get(url)
+
+                location = str(randint(1, 1000)) + '.jpg'
+
+                with open(location, 'wb') as f:  
+                    f.write(r.content)
+
+                locationt = (location,)
+
+
+                try:
+                    await glitch.cli(locationt, str(randint(5,20)), str(randint(0,100)), str(randint(5,20)))
+                except:
+                    pass
+
+                glitchJpg = location[:-4] + '_glitched.png'
+
+                await self.bot.send_file(ctx.message.channel, glitchJpg)
+
+                remove(location)
+
+                remove(glitchJpg)
 
 def setup(bot):
     bot.add_cog(Utility(bot))
