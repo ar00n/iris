@@ -127,8 +127,8 @@ class Jpeg(object):
 def cli(image, amount, seed, iterations, jpg, output):
     image_bytes = bytearray(image.read())
     amount = random.randint(0, 99)
-    seed = random.randint(0, 99)
-    iterations = random.randint(5, 40)
+    seed = random.randint(0, 5)
+    iterations = random.randint(5, 35)
     jpeg = Jpeg(image_bytes, amount, seed, iterations)
 
     click.echo("\nScrambling your image with the following parameters:")
