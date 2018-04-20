@@ -7,6 +7,10 @@ from secrets import choice
 from random import randint
 import urllib
 import json
+import requests
+import glitch
+from os import remove
+from PIL import Image
 
 class Utility():
     def __init__(self, bot):
@@ -129,9 +133,9 @@ class Utility():
         """<imageUrl> Glitches the specified JPG URL.
             A command that will glitch the JPG given.
             """
-        if ".jpg" not in url:
-            await self.bot.say('Image must be a `.jpg`.')
-        else:  
+        if not any(x in url for x in ['.jpg', '.png']):
+            await self.bot.say('Image must be a `.jpg` or `.png`.')
+        else:
             r = requests.head(url)
             if r.status_code != 200:
                 await self.bot.say("That file doesn't exist.")
@@ -139,25 +143,37 @@ class Utility():
                 await self.bot.say('Image must be lower than 5 MB.')
             else:
                 r = requests.get(url)
-
-                location = str(randint(1, 1000)) + '.jpg'
+                
+                if '.jpg' in url:
+                    location = str(randint(1, 1000)) + '.jpg'
+                elif '.png' in url:
+                    randnum = str(randint(1, 1000))
+                    pnglocation = randnum + '.png'
+                    location = randnum + '.png'
 
                 with open(location, 'wb') as f:  
                     f.write(r.content)
 
-                locationt = (location,)
+                if '.png' in url:
+                    location = pnglocation[:-4] + '.jpg'
+                    png = Image.open(pnglocation)
+                    rgb_png = png.convert('RGB')
+                    rgb_png.save(location)
 
+                locationt = (location,)
 
                 try:
                     await glitch.cli(locationt, str(randint(5,20)), str(randint(0,100)), str(randint(5,20)))
                 except:
                     pass
 
-                glitchJpg = location[:-4] + '_glitched.png'
+                glitchJpg = location[:-4] + '_glitched.jpg'
 
                 await self.bot.send_file(ctx.message.channel, glitchJpg)
 
                 remove(location)
+
+                remove(pnglocation)
 
                 remove(glitchJpg)
 
