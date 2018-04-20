@@ -39,7 +39,7 @@ class Utility():
 
     @commands.command(pass_context=True)
     async def info(self, ctx, user: discord.Member = None):
-        """*search <user>
+        """<user> Returns user information.
             A command that will return information about the requested user or you!
             """
         if user == None:
@@ -48,7 +48,7 @@ class Utility():
 
     @commands.command(pass_context=True)
     async def avatar(self, ctx, user: discord.Member):
-        """*search <user>
+        """<user> Returns user avatar.
             A command that will return the avatar url of a user.
             """
         await self.bot.say('{}'.format(user.avatar_url))
@@ -56,7 +56,7 @@ class Utility():
     @commands.command(pass_context=True)
     async def hash(self, ctx, hash, *, message):
         """<algorithm> <plainText> Converts given text to requested hash.
-            A command that will convert given text to: sha1, sha224, sha256, sha384, sha512, blake2b, blake2s and md5()
+            A command that will convert given text to: sha1, sha224, sha256, sha384, sha512, blake2b, blake2s and md5.
             """
         if hash == "md5":
             m = hashlib.md5()
@@ -87,7 +87,7 @@ class Utility():
         """What's the time?
             A command that will return the time.
             """
-        choices = (str(datetime.datetime.now().time())[:-7], 'Hammer Time :hammer:', 'ITS TIME TO STOP')
+        choices = (str(datetime.datetime.utcnow().time())[:-7] + ' UTC', 'Hammer Time :hammer:', 'ITS TIME TO STOP')
         await self.bot.say(choice(choices))
 
     @commands.command(pass_context=True)
@@ -99,11 +99,13 @@ class Utility():
         await self.bot.say('There are {} members in this server.'.format(ctx.message.server.member_count))
 
     @commands.command(pass_context=True)
-    async def randint(self, ctx, min: int, max: int):
-        """Generate a random integer. 
-            A command that will return a random number between 1000000 and 9999999.
+    async def number(self, ctx, min: int = None, max: int = None):
+        """[min] [max] Generate a random number. 
+            A command that will return a random number between 1000000 and 9999999 unless specified otherwise.
             """
-        if max < 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001:
+        if min == None and max == None:
+            await self.bot.say(randint(1000000, 9999999))
+        elif min != None and max < 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001:
             await self.bot.say(randint(min, max))
         else:
             await self.bot.say('Woah, the max I can do is `10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000` (a Googol). Calm down {}!'.format(ctx.message.author.mention))
@@ -130,8 +132,8 @@ class Utility():
 
     @commands.command(pass_context=True)
     async def glitch(self, ctx, url):
-        """<imageUrl> Glitches the specified JPG URL.
-            A command that will glitch the JPG given.
+        """<imageUrl> Glitches the specified JPG / PNG URL.
+            A command that will glitch the JPG or PNG given.
             """
         if not any(x in url for x in ['.jpg', '.png']):
             await self.bot.say('Image must be a `.jpg` or `.png`.')
